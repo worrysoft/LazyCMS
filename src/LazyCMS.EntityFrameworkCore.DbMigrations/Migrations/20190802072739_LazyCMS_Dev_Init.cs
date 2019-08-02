@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LazyCMS.Migrations
 {
-    public partial class mysql_init : Migration
+    public partial class LazyCMS_Dev_Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -324,6 +324,27 @@ namespace LazyCMS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IdentityServerPersistedGrants", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LazyCMS_WxMenu",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ExtraProperties = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierId = table.Column<Guid>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LazyCMS_WxMenu", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -752,6 +773,34 @@ namespace LazyCMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LazyCMS_WxSubmenu",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierId = table.Column<Guid>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    ReplyType = table.Column<int>(nullable: false),
+                    ReplyContent = table.Column<string>(nullable: true),
+                    WxMenuId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LazyCMS_WxSubmenu", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LazyCMS_WxSubmenu_LazyCMS_WxMenu_WxMenuId",
+                        column: x => x.WxMenuId,
+                        principalTable: "LazyCMS_WxMenu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AbpEntityPropertyChanges",
                 columns: table => new
                 {
@@ -909,6 +958,11 @@ namespace LazyCMS.Migrations
                 name: "IX_IdentityServerPersistedGrants_SubjectId_ClientId_Type",
                 table: "IdentityServerPersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LazyCMS_WxSubmenu_WxMenuId",
+                table: "LazyCMS_WxSubmenu",
+                column: "WxMenuId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -995,6 +1049,9 @@ namespace LazyCMS.Migrations
                 name: "IdentityServerPersistedGrants");
 
             migrationBuilder.DropTable(
+                name: "LazyCMS_WxSubmenu");
+
+            migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
 
             migrationBuilder.DropTable(
@@ -1014,6 +1071,9 @@ namespace LazyCMS.Migrations
 
             migrationBuilder.DropTable(
                 name: "IdentityServerIdentityResources");
+
+            migrationBuilder.DropTable(
+                name: "LazyCMS_WxMenu");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
