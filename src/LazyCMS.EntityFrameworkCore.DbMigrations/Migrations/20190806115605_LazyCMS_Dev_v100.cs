@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LazyCMS.Migrations
 {
-    public partial class LazyCMS_Dev : Migration
+    public partial class LazyCMS_Dev_v100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -327,7 +327,7 @@ namespace LazyCMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LazyCMS_WxMenu",
+                name: "LazyCMS_WxUser",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -337,14 +337,13 @@ namespace LazyCMS.Migrations
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierId = table.Column<Guid>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
-                    DeleterId = table.Column<Guid>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                    PublicOpenId = table.Column<string>(maxLength: 100, nullable: true),
+                    AppletOpenId = table.Column<string>(maxLength: 100, nullable: true),
+                    IsEnable = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LazyCMS_WxMenu", x => x.Id);
+                    table.PrimaryKey("PK_LazyCMS_WxUser", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -773,10 +772,12 @@ namespace LazyCMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LazyCMS_WxSubmenu",
+                name: "LazyCMS_WxMenu",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    ExtraProperties = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -785,17 +786,15 @@ namespace LazyCMS.Migrations
                     DeleterId = table.Column<Guid>(nullable: true),
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    ReplyType = table.Column<int>(nullable: false),
-                    ReplyContent = table.Column<string>(nullable: true),
-                    WxMenuId = table.Column<Guid>(nullable: true)
+                    WxUserId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LazyCMS_WxSubmenu", x => x.Id);
+                    table.PrimaryKey("PK_LazyCMS_WxMenu", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LazyCMS_WxSubmenu_LazyCMS_WxMenu_WxMenuId",
-                        column: x => x.WxMenuId,
-                        principalTable: "LazyCMS_WxMenu",
+                        name: "FK_LazyCMS_WxMenu_LazyCMS_WxUser_WxUserId",
+                        column: x => x.WxUserId,
+                        principalTable: "LazyCMS_WxUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -840,6 +839,34 @@ namespace LazyCMS.Migrations
                         principalTable: "IdentityServerApiScopes",
                         principalColumns: new[] { "ApiResourceId", "Name" },
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LazyCMS_WxSubmenu",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorId = table.Column<Guid>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierId = table.Column<Guid>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    ReplyType = table.Column<int>(nullable: false),
+                    ReplyContent = table.Column<string>(nullable: true),
+                    WxMenuId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LazyCMS_WxSubmenu", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LazyCMS_WxSubmenu_LazyCMS_WxMenu_WxMenuId",
+                        column: x => x.WxMenuId,
+                        principalTable: "LazyCMS_WxMenu",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -958,6 +985,11 @@ namespace LazyCMS.Migrations
                 name: "IX_IdentityServerPersistedGrants_SubjectId_ClientId_Type",
                 table: "IdentityServerPersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LazyCMS_WxMenu_WxUserId",
+                table: "LazyCMS_WxMenu",
+                column: "WxUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LazyCMS_WxSubmenu_WxMenuId",
@@ -1080,6 +1112,9 @@ namespace LazyCMS.Migrations
 
             migrationBuilder.DropTable(
                 name: "IdentityServerApiResources");
+
+            migrationBuilder.DropTable(
+                name: "LazyCMS_WxUser");
         }
     }
 }

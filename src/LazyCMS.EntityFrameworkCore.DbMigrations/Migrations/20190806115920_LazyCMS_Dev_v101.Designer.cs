@@ -3,14 +3,16 @@ using System;
 using LazyCMS.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LazyCMS.Migrations
 {
     [DbContext(typeof(LazyCMSMigrationsDbContext))]
-    partial class LazyCMSMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190806115920_LazyCMS_Dev_v101")]
+    partial class LazyCMS_Dev_v101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

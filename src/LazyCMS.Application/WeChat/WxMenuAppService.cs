@@ -25,12 +25,14 @@ namespace LazyCMS.WeChat
         public WxMenuAppService(IRepository<WxMenu, Guid> repository)
             : base(repository)
         {
-
         }
 
         public List<WxMenuDto> GetAggregateRoot()
         {
-            var list = Repository.GetList(true);
+            IReadOnlyRepository<WxMenu, Guid> ror = Repository as IReadOnlyRepository<WxMenu, Guid>;
+            var q = ror.WithDetails(t => t.Submenus);
+
+            var list = q.ToList();
             return list.Select(MapToGetListOutputDto).ToList();
         }
     }

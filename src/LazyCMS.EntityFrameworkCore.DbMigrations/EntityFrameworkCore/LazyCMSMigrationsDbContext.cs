@@ -47,6 +47,8 @@ namespace LazyCMS.EntityFrameworkCore
                 b.ConfigureCustomUserProperties();
             });
 
+            builder.Ignore<Users.AppUser>();
+
             /* Configure your own tables/entities inside the ConfigureLazyCMS method */
 
             builder.ConfigureLazyCMS<Interface.IAutoBuildEntity>();

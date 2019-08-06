@@ -10,7 +10,8 @@ namespace LazyCMS.WeChat
     /// <summary>
     /// 子菜单
     /// </summary>
-    public class WxSubmenu : FullAuditedEntity<Guid>, IAutoBuildEntity
+    public class WxSubmenu : FullAuditedEntity<Guid>,
+        IAutoBuildEntity //自定义的自动构建实体接口
     {
         /// <summary>
         /// 子菜单名称

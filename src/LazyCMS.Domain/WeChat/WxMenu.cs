@@ -13,7 +13,8 @@ namespace LazyCMS.WeChat
     /// <summary>
     /// 微信菜单(聚合根)
     /// </summary>
-    public class WxMenu : FullAuditedAggregateRoot<Guid>, IAutoBuildEntity
+    public class WxMenu : FullAuditedAggregateRoot<Guid>,
+        IAutoBuildEntity //自定义的自动构建实体接口
     {
         /// <summary>
         /// 菜单名称
@@ -24,7 +25,9 @@ namespace LazyCMS.WeChat
         /// <summary>
         /// 子菜单
         /// </summary>
-        public virtual List<WxSubmenu> Submenus { get; protected set; }
+        public virtual ICollection<WxSubmenu> Submenus { get; protected set; }
+
+        public virtual WxUser WxUser { get; protected set; }
 
         protected WxMenu()
         {

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LazyCMS.Migrations
 {
     [DbContext(typeof(LazyCMSMigrationsDbContext))]
-    [Migration("20190805023750_LazyCMS_Dev")]
-    partial class LazyCMS_Dev
+    [Migration("20190806115605_LazyCMS_Dev_v100")]
+    partial class LazyCMS_Dev_v100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -58,7 +58,11 @@ namespace LazyCMS.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
+                    b.Property<Guid?>("WxUserId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WxUserId");
 
                     b.ToTable("LazyCMS_WxMenu");
                 });
@@ -106,6 +110,43 @@ namespace LazyCMS.Migrations
                     b.HasIndex("WxMenuId");
 
                     b.ToTable("LazyCMS_WxSubmenu");
+                });
+
+            modelBuilder.Entity("LazyCMS.WeChat.WxUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppletOpenId")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsEnable");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("PublicOpenId")
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LazyCMS_WxUser");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -1265,6 +1306,13 @@ namespace LazyCMS.Migrations
                     b.HasKey("TenantId", "Name");
 
                     b.ToTable("AbpTenantConnectionStrings");
+                });
+
+            modelBuilder.Entity("LazyCMS.WeChat.WxMenu", b =>
+                {
+                    b.HasOne("LazyCMS.WeChat.WxUser", "WxUser")
+                        .WithMany()
+                        .HasForeignKey("WxUserId");
                 });
 
             modelBuilder.Entity("LazyCMS.WeChat.WxSubmenu", b =>
