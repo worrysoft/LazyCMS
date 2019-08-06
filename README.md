@@ -1,0 +1,3 @@
+# LazyCMS
+基于 vNext Abp 的通用CMS开发框架
+数据访问层采用EntityFrameworkCore，并在此基础上优化了在DbContext中申明公开DbSet属性与数据映射实体的导航属性自动包含表达式配置（非延迟加载）。
