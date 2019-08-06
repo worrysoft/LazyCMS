@@ -49,10 +49,11 @@ namespace LazyCMS.EntityFrameworkCore
         {
             options.DefaultWithDetailsFunc = p =>
             {
+                // 获取实体的导航属性集合
                 var ti = typeof(TEntity) as System.Reflection.TypeInfo;
-
                 var proList = ti.DeclaredProperties.Where(t => t.GetMethod.IsPublic && t.GetMethod.IsVirtual);
 
+                //循环导航属性集合添加 include 表达式
                 foreach (PropertyInfo pi in proList)
                 {
                     p = p.Include(pi.Name);

@@ -42,8 +42,9 @@ namespace LazyCMS.EntityFrameworkCore
                  * default repositories only for aggregate roots */
                 options.AddDefaultRepositories(includeAllEntities: true);
 
-                //动态创建仓储
-                options.ConfigureDynamicRepository();
+                /* 动态创建仓储
+                 * 根据传入的泛型自动发现对应继承的实例 */
+                options.ConfigureDynamicRepository<Interface.IAutoBuildEntity>();
             });
 
             Configure<AbpDbContextOptions>(options =>

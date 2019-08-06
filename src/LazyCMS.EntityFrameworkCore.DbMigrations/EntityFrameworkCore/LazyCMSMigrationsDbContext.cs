@@ -49,7 +49,7 @@ namespace LazyCMS.EntityFrameworkCore
 
             /* Configure your own tables/entities inside the ConfigureLazyCMS method */
 
-            builder.ConfigureLazyCMS();
+            builder.ConfigureLazyCMS<Interface.IAutoBuildEntity>();
         }
     }
 }

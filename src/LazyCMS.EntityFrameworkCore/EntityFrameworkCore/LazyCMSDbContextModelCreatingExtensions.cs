@@ -17,7 +17,7 @@ namespace LazyCMS.EntityFrameworkCore
 {
     public static class LazyCMSDbContextModelCreatingExtensions
     {
-        public static void ConfigureLazyCMS(this ModelBuilder builder)
+        public static void ConfigureLazyCMS<TDependInterface>(this ModelBuilder builder)
         {
             Check.NotNull(builder, nameof(builder));
 
@@ -33,7 +33,7 @@ namespace LazyCMS.EntityFrameworkCore
             /*
              * 自动注入实体
              */
-            foreach (Type entityType in GetAutoBuildEntities())
+            foreach (Type entityType in GetAutoBuildEntities<TDependInterface>())
             {
                 builder.Entity(entityType, (b) =>
                 {
@@ -47,26 +47,28 @@ namespace LazyCMS.EntityFrameworkCore
         }
 
         /// <summary>
-        /// 从当前程序集中注册指定接口 IAutoBuildEntity 实例
+        /// 从当前程序集中注册指定泛型实例
         /// </summary>
+        /// <typeparam name="TDependInterface"></typeparam>
         /// <returns></returns>
-        private static IEnumerable<Type> GetAutoBuildEntities()
+        private static IEnumerable<Type> GetAutoBuildEntities<TDependInterface>()
         {
             var domainAssemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(t => t.FullName.StartsWith("LazyCMS."));
-            return domainAssemblies.SelectMany(s => s.ExportedTypes).Where(t => typeof(Interface.IAutoBuildEntity).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
+            return domainAssemblies.SelectMany(s => s.ExportedTypes).Where(t => typeof(TDependInterface).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
         }
 
         /// <summary>
         /// 动态创建仓储
         /// </summary>
+        /// <typeparam name="TDependInterface"></typeparam>
         /// <param name="options"></param>
-        public static void ConfigureDynamicRepository(this IAbpDbContextRegistrationOptionsBuilder options)
+        public static void ConfigureDynamicRepository<TDependInterface>(this IAbpDbContextRegistrationOptionsBuilder options)
         {
             //反射获取方法
             var AddRepositoryMethod = options.GetType().GetMethod("AddRepository"); // AddRepository
             var EntityMethod = options.GetType().GetMethod("Entity"); // EntityOptions
 
-            foreach (Type entityType in GetAutoBuildEntities())
+            foreach (Type entityType in GetAutoBuildEntities<TDependInterface>())
             {
                 // 构建实体导航属性自动包含委托
                 var call = EntityIncludeBuilder.Instance.Create(entityType);
