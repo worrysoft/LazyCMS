@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -23,6 +26,12 @@ namespace LazyCMS.WeChat
             : base(repository)
         {
 
+        }
+
+        public List<WxMenuDto> GetAggregateRoot()
+        {
+            var list = Repository.GetList(true);
+            return list.Select(MapToGetListOutputDto).ToList();
         }
     }
 }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LazyCMS.Migrations
 {
     [DbContext(typeof(LazyCMSMigrationsDbContext))]
-    [Migration("20190802072739_LazyCMS_Dev_Init")]
-    partial class LazyCMS_Dev_Init
+    [Migration("20190805023750_LazyCMS_Dev")]
+    partial class LazyCMS_Dev
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

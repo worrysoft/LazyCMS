@@ -17,14 +17,19 @@ namespace LazyCMS.WeChat
         /// </summary>
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string Name { get; protected set; }
         /// <summary>
         /// 回复类型
         /// </summary>
-        public MenuReplyType ReplyType { get; set; }
+        public MenuReplyType ReplyType { get; protected set; }
         /// <summary>
         /// 回复内容
         /// </summary>
-        public string ReplyContent { get; set; }
+        public string ReplyContent { get; protected set; }
+
+        protected WxSubmenu()
+        {
+
+        }
     }
 }

@@ -6,6 +6,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System;
 using Volo.Abp.EntityFrameworkCore.Modeling;
+using Volo.Abp.EntityFrameworkCore.DependencyInjection;
+using System.Collections.Generic;
+using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
+using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace LazyCMS.EntityFrameworkCore
 {
@@ -25,21 +31,56 @@ namespace LazyCMS.EntityFrameworkCore
             //});
 
             /*
-             * 从当前程序集中注册指定接口的实体实例
-             * IAutoBuildEntity 实例
+             * 自动注入实体
              */
-            var domainAssemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(t => t.FullName.StartsWith("LazyCMS."));
-            var autoBuildEntities = domainAssemblies.SelectMany(s => s.ExportedTypes).Where(t => typeof(Interface.IAutoBuildEntity).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
-
-            foreach (Type entityType in autoBuildEntities)
+            foreach (Type entityType in GetAutoBuildEntities())
             {
                 builder.Entity(entityType, (b) =>
                 {
-                    b.ToTable($"{LazyCMSConsts.DbTablePrefix}_{entityType.Name}", LazyCMSConsts.DbSchema);
-                    b.TryConfigureFullAudited();
-                    b.TryConfigureExtraProperties();
-                    b.TryConfigureConcurrencyStamp();
+                    b.ToTable($"{LazyCMSConsts.DbTablePrefix}_{entityType.Name}", LazyCMSConsts.DbSchema); //定义实体映射表名
+                    b.TryConfigureAudited();
+                    b.TryConfigureFullAudited(); //配置完全日志审核
+                    b.TryConfigureExtraProperties(); //配置额外属性
+                    b.TryConfigureConcurrencyStamp(); //配置并发时间戳
                 });
+            }
+        }
+
+        /// <summary>
+        /// 从当前程序集中注册指定接口 IAutoBuildEntity 实例
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Type> GetAutoBuildEntities()
+        {
+            var domainAssemblies = System.AppDomain.CurrentDomain.GetAssemblies().Where(t => t.FullName.StartsWith("LazyCMS."));
+            return domainAssemblies.SelectMany(s => s.ExportedTypes).Where(t => typeof(Interface.IAutoBuildEntity).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract);
+        }
+
+        /// <summary>
+        /// 动态创建仓储
+        /// </summary>
+        /// <param name="options"></param>
+        public static void ConfigureDynamicRepository(this IAbpDbContextRegistrationOptionsBuilder options)
+        {
+            //反射获取方法
+            var AddRepositoryMethod = options.GetType().GetMethod("AddRepository"); // AddRepository
+            var EntityMethod = options.GetType().GetMethod("Entity"); // EntityOptions
+
+            foreach (Type entityType in GetAutoBuildEntities())
+            {
+                // 构建实体导航属性自动包含委托
+                var call = EntityIncludeBuilder.Instance.Create(entityType);
+                EntityMethod.MakeGenericMethod(entityType).Invoke(options, new object[] { call });
+
+                // 获取实体主键类型
+                var primaryKeyType = EntityHelper.FindPrimaryKeyType(entityType);
+
+                // 构建实体对应的仓储类型
+                Type registerRepository = (primaryKeyType == null ? typeof(EfCoreRepository<,>) : typeof(EfCoreRepository<,,>))
+                    .MakeGenericType(typeof(LazyCMSDbContext), entityType, primaryKeyType);
+
+                // 添加实体仓储
+                AddRepositoryMethod.MakeGenericMethod(entityType, registerRepository).Invoke(options, null);
             }
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -19,10 +20,15 @@ namespace LazyCMS.WeChat
         /// </summary>
         [Required]
         [StringLength(100)]
-        public string Name { get; set; }
+        public string Name { get; protected set; }
         /// <summary>
         /// 子菜单
         /// </summary>
-        public virtual List<WxSubmenu> Submenus { get; set; }
+        public virtual List<WxSubmenu> Submenus { get; protected set; }
+
+        protected WxMenu()
+        {
+
+        }
     }
 }

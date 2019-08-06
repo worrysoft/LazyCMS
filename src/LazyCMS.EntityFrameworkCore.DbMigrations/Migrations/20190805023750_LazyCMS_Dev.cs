@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LazyCMS.Migrations
 {
-    public partial class LazyCMS_Dev_Init : Migration
+    public partial class LazyCMS_Dev : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
