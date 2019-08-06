@@ -16,30 +16,34 @@ namespace LazyCMS.WeChat
     {
         private readonly IRepository<WxMenu, Guid> wxMenus;
         private readonly IRepository<WxUser, Guid> wxUsers;
-        private readonly IRepository<AppUser, Guid> appUsers;
+        private readonly IRepository<Volo.Abp.Identity.IdentityUser, Guid> identityUsers;
 
         public WeChatAppService(IRepository<WxMenu, Guid> _rMenu,
             IRepository<WxUser, Guid> _rUser,
-            IRepository<AppUser, Guid> _appUsers)
+            IRepository<Volo.Abp.Identity.IdentityUser, Guid> _identityUsers)
         {
             this.wxMenus = _rMenu;
             this.wxUsers = _rUser;
-            this.appUsers = _appUsers;
+            this.identityUsers = _identityUsers;
         }
 
-        public async Task<bool> CreateWeChatUserAsync(string openId)
+        public async Task<WxUser> CreateGetOrAddAsync(string openId)
         {
             var wxu = wxUsers.WithDetails().Where(t => t.PublicOpenId.Equals(openId)).SingleOrDefault();
 
             if (wxu == null)
             {
-                WxUser m = new WxUser(Guid.Parse("724f85bf-4b4c-fc0b-ee9e-39ef787933c2"));
-                m.UpdatePublicOpenId(openId);
-                var r = await wxUsers.InsertAsync(m);
+                Guid uid = Guid.NewGuid();
+                await this.identityUsers.InsertAsync(new Volo.Abp.Identity.IdentityUser(uid, "测试微信用户"));
 
-                return true;
+                WxUser m = new WxUser(uid);
+                m.UpdatePublicOpenId(openId);
+                await wxUsers.InsertAsync(m);
+
+                return m;
             }
-            return false;
+
+            return wxu;
         }
     }
 }

@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LazyCMS.Migrations
 {
     [DbContext(typeof(LazyCMSMigrationsDbContext))]
-    [Migration("20190806115605_LazyCMS_Dev_v100")]
+    [Migration("20190806174035_LazyCMS_Dev_v100")]
     partial class LazyCMS_Dev_v100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("LazyCMS.WeChat.WxMenu", b =>
@@ -143,6 +143,8 @@ namespace LazyCMS.Migrations
 
                     b.Property<string>("PublicOpenId")
                         .HasMaxLength(100);
+
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -557,6 +559,8 @@ namespace LazyCMS.Migrations
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("HeadPortrait");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()

@@ -90,6 +90,11 @@ namespace LazyCMS.EntityFrameworkCore
             where TUser : class, IUser
         {
             //b.Property<string>(nameof(AppUser.MyProperty))...
+
+            /* 自动注册扩展属性
+             * 反射遍历AppUser
+             * */
+            b.Property<string>(nameof(Users.AppUser.HeadPortrait));
         }
     }
 }

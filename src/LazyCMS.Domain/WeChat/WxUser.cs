@@ -45,7 +45,7 @@ namespace LazyCMS.WeChat
 
         public WxUser(Guid userId)
         {
-            //User = new Users.AppUser(userId, "18328408303");
+            this.UserId = userId;
         }
 
         /// <summary>

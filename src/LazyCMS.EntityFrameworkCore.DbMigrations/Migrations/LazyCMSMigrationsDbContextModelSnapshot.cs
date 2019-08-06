@@ -14,7 +14,7 @@ namespace LazyCMS.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("LazyCMS.WeChat.WxMenu", b =>
@@ -557,6 +557,8 @@ namespace LazyCMS.Migrations
 
                     b.Property<string>("ExtraProperties")
                         .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("HeadPortrait");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()

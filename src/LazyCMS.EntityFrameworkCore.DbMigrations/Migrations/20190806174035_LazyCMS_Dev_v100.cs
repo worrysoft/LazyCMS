@@ -194,7 +194,8 @@ namespace LazyCMS.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false, defaultValue: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false, defaultValue: false),
-                    AccessFailedCount = table.Column<int>(nullable: false, defaultValue: 0)
+                    AccessFailedCount = table.Column<int>(nullable: false, defaultValue: 0),
+                    HeadPortrait = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -337,6 +338,7 @@ namespace LazyCMS.Migrations
                     CreatorId = table.Column<Guid>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierId = table.Column<Guid>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
                     PublicOpenId = table.Column<string>(maxLength: 100, nullable: true),
                     AppletOpenId = table.Column<string>(maxLength: 100, nullable: true),
                     IsEnable = table.Column<bool>(nullable: false)

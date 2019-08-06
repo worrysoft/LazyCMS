@@ -45,16 +45,11 @@ namespace LazyCMS.Users
          *
          * public virtual string MyProperty { get; set; }
          */
+        public virtual string HeadPortrait { get; set; }
 
         private AppUser()
         {
 
-        }
-
-        public AppUser(Guid id, string userName)
-        {
-            this.Id = id;
-            this.UserName = UserName;
         }
     }
 }
