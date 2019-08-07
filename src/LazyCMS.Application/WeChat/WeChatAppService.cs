@@ -29,14 +29,14 @@ namespace LazyCMS.WeChat
 
         public async Task<WxUser> CreateGetOrAddAsync(string openId)
         {
-            var wxu = wxUsers.WithDetails().Where(t => t.PublicOpenId.Equals(openId)).SingleOrDefault();
+            var wxu = wxUsers.WithDetails()
+                .Where(t => t.PublicOpenId.Equals(openId)).SingleOrDefault();
 
             if (wxu == null)
             {
-                Guid uid = Guid.NewGuid();
-                await this.identityUsers.InsertAsync(new Volo.Abp.Identity.IdentityUser(uid, "测试微信用户"));
+                var user = await this.identityUsers.InsertAsync(new Volo.Abp.Identity.IdentityUser(GuidGenerator.Create(), "测试微信用户"));
 
-                WxUser m = new WxUser(uid);
+                WxUser m = new WxUser(user.Id);
                 m.UpdatePublicOpenId(openId);
                 await wxUsers.InsertAsync(m);
 

@@ -17,6 +17,34 @@ namespace LazyCMS.Migrations
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("LazyCMS.AppSystem.AppConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ItemKey")
+                        .IsRequired();
+
+                    b.Property<string>("ItemValue")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LazyCMS_AppConfig");
+                });
+
             modelBuilder.Entity("LazyCMS.WeChat.WxMenu", b =>
                 {
                     b.Property<Guid>("Id")

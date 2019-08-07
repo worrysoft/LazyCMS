@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LazyCMS.Migrations
 {
     [DbContext(typeof(LazyCMSMigrationsDbContext))]
-    [Migration("20190806174035_LazyCMS_Dev_v100")]
+    [Migration("20190807164013_LazyCMS_Dev_v100")]
     partial class LazyCMS_Dev_v100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,6 +18,34 @@ namespace LazyCMS.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("LazyCMS.AppSystem.AppConfig", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ItemKey")
+                        .IsRequired();
+
+                    b.Property<string>("ItemValue")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnName("LastModifierId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LazyCMS_AppConfig");
+                });
 
             modelBuilder.Entity("LazyCMS.WeChat.WxMenu", b =>
                 {

@@ -23,4 +23,8 @@
     <Content Remove="Localization\LazyCMS\*.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AppSystem\" />
+  </ItemGroup>
+
 </Project>
